@@ -1,0 +1,297 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #4caf50, #ffeb3b);
+    color: #004d00;
+    min-height: 100vh;
+}
+
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.dashboard-container {
+    text-align: center;
+    padding: 40px 20px 20px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.icon-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.icon-tabs .tab-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+    color: #4caf50;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.icon-tabs .tab-button:hover,
+.icon-tabs .tab-button.active {
+    color: #388e3c;
+}
+
+.icon-tabs .tab-icon {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    user-select: none;
+}
+
+.welcome-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 60px 80px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    max-width: 600px;
+    width: 90%;
+    animation: fadeInScale 1s ease forwards;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    min-height: 150px;
+}
+
+/* Center welcome container on index.html */
+body > .welcome-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 60px 80px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    text-align: center;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+h1 {
+    margin-bottom: 40px;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+button {
+    background: linear-gradient(45deg, #4caf50, #8bc34a);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    font-size: 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.5);
+    transition: all 0.3s ease;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #388e3c, #689f38);
+    box-shadow: 0 8px 20px rgba(56, 142, 60, 0.7);
+    transform: translateY(-3px);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 40px 30px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 480px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    animation: slideDown 0.4s ease forwards;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-container h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #4caf50;
+    text-align: center;
+}
+
+.form-style {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-style label {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-style input,
+.form-style select {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-style input:focus,
+.form-style select:focus {
+    border-color: #388e3c;
+}
+
+.btn-primary {
+    margin-top: 25px;
+    background: linear-gradient(45deg, #4caf50, #8bc34a);
+    color: white;
+    border: none;
+    padding: 15px 0;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.5);
+    transition: all 0.3s ease;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #388e3c, #689f38);
+    box-shadow: 0 8px 20px rgba(56, 142, 60, 0.7);
+    transform: translateY(-3px);
+}
+
+.form-message {
+    margin-top: 15px;
+    font-weight: 600;
+    color: green;
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Login form style for admission form */
+.login-form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.login-form-style label {
+    font-weight: 600;
+    color: #333;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.login-form-style input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.login-form-style input:focus {
+    border-color: #388e3c;
+}
+
+.login-form-style button.btn-primary {
+    margin-top: 25px;
+    background: linear-gradient(45deg, #4caf50, #8bc34a);
+    color: white;
+    border: none;
+    padding: 15px 0;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.5);
+    transition: all 0.3s ease;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.login-form-style button.btn-primary:hover {
+    background: linear-gradient(45deg, #388e3c, #689f38);
+    box-shadow: 0 8px 20px rgba(56, 142, 60, 0.7);
+    transform: translateY(-3px);
+}

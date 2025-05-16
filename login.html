@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Theresa Aubyn Memorial School</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .role-selection {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-form {
+            display: none;
+            max-width: 300px;
+            margin: 0 auto;
+            background-color: #ffffcc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #004d00;
+            border-radius: 5px;
+        }
+        .login-form button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="role-selection">
+        <h2>Login as:</h2>
+        <button id="headmasterBtn">Headmaster</button>
+        <button id="ownerBtn">School Owner</button>
+    </div>
+
+    <div class="login-form" id="loginForm">
+        <h3 id="formTitle"></h3>
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button id="loginBtn">Login</button>
+        <p id="errorMsg" style="color: red; display: none;"></p>
+    </div>
+
+    <script>
+        const headmasterBtn = document.getElementById('headmasterBtn');
+        const ownerBtn = document.getElementById('ownerBtn');
+        const loginForm = document.getElementById('loginForm');
+        const formTitle = document.getElementById('formTitle');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        let selectedRole = null;
+
+        headmasterBtn.addEventListener('click', () => {
+            selectedRole = 'headmaster';
+            showLoginForm();
+        });
+
+        ownerBtn.addEventListener('click', () => {
+            selectedRole = 'owner';
+            showLoginForm();
+        });
+
+        function showLoginForm() {
+            formTitle.textContent = `Login as ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`;
+            loginForm.style.display = 'block';
+            errorMsg.style.display = 'none';
+        }
+
+        const users = {
+            headmaster: { email: 'theresaaubyn@gmail.com', password: 'theresaaubyn2025' },
+            owner: { email: 'yeboahclementina00@gmail.com', password: 'empress3103' }
+        };
+
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!selectedRole) {
+                errorMsg.textContent = 'Please select a role.';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const user = users[selectedRole];
+            if (email === user.email && password === user.password) {
+                errorMsg.style.display = 'none';
+                if (selectedRole === 'headmaster') {
+                    window.location.href = 'dashboard_headmaster.html';
+                } else if (selectedRole === 'owner') {
+                    window.location.href = 'dashboard_owner.html';
+                }
+            } else {
+                errorMsg.textContent = 'Invalid email or password.';
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

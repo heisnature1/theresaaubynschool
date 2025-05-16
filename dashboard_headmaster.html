@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Headmaster Dashboard - Theresa Aubyn Memorial School</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .dashboard-container {
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <h1>Theresa Aubyn Memorial School</h1>
+    </header>
+    <div class="dashboard-container">
+        <h1>Headmaster Dashboard</h1>
+
+        <div class="tabs icon-tabs">
+            <button class="tab-button" data-tab="admission" title="Admission">
+                <span class="tab-icon">&#128218;</span>
+                <span class="tab-label">Admission</span>
+            </button>
+            <button class="tab-button" data-tab="attendance" title="Teachers Attendance">
+                <span class="tab-icon">&#128100;</span>
+                <span class="tab-label">Attendance</span>
+            </button>
+            <button class="tab-button" data-tab="setFees" title="Set School Fees">
+                <span class="tab-icon">&#128179;</span>
+                <span class="tab-label">Set Fees</span>
+            </button>
+            <button class="tab-button" data-tab="paymentFees" title="Payment of School Fees">
+                <span class="tab-icon">&#128181;</span>
+                <span class="tab-label">Payments</span>
+            </button>
+            <button class="tab-button" data-tab="students" title="Students List">
+                <span class="tab-icon">&#128101;</span>
+                <span class="tab-label">Students</span>
+            </button>
+        </div>
+
+        <div class="tab-content" id="admission" style="display:none;">
+            <h2>Admission Form</h2>
+            <div class="login-form-container">
+                <form id="admissionForm" class="form-style login-form-style">
+                    <label for="studentName">Student Name:</label>
+                    <input type="text" id="studentName" required />
+
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" required />
+
+                    <label for="class">Class:</label>
+                    <input type="text" id="class" required />
+
+                    <label for="parentName">Parent Name:</label>
+                    <input type="text" id="parentName" required />
+
+                    <label for="admissionDate">Date of Admission:</label>
+                    <input type="date" id="admissionDate" required />
+
+                    <label for="parentPhone">Parent Phone Number:</label>
+                    <input type="tel" id="parentPhone" required />
+
+                    <label for="parentAddress">Parent Address:</label>
+                    <input type="text" id="parentAddress" required />
+
+                    <button type="submit" class="btn-primary">Submit Admission</button>
+                </form>
+                <div id="admissionMsg" class="form-message"></div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="attendance" style="display:none;">
+            <h2>Teachers Attendance</h2>
+            <label>Enter Your Name:</label><br />
+            <input type="text" id="teacherName" /><br /><br />
+            <button id="checkInBtn">Check In</button>
+            <button id="checkOutBtn">Check Out</button>
+            <div id="attendanceMsg" style="color: red; margin-top: 10px;"></div>
+        </div>
+
+        <div class="tab-content" id="setFees" style="display:none;">
+            <h2>Set School Fees</h2>
+            <form id="setFeesForm" class="form-style">
+                <label for="classType">Class Type:</label>
+                <select id="classType" required>
+                    <option value="">Select Class Type</option>
+                    <option value="belowJHS">Below JHS</option>
+                    <option value="JHS">JHS</option>
+                </select>
+
+                <label for="feeAmount">Set Fee Amount (GHS):</label>
+                <input type="number" id="feeAmount" min="0" required />
+
+                <button type="submit" class="btn-primary">Set Fee</button>
+            </form>
+            <div id="setFeesMsg" class="form-message"></div>
+        </div>
+
+        <div class="tab-content" id="paymentFees" style="display:none;">
+            <h2>Payment of School Fees</h2>
+            <label>Enter Student Name:</label><br />
+            <input type="text" id="paymentStudentName" /><br /><br />
+            <div id="paymentInfo" style="display:none;">
+                <p>Amount Owing (GHS): <span id="paymentAmountOwing"></span></p>
+                <label>Enter Payment Amount (GHS):</label><br />
+                <input type="number" id="paymentInputAmount" min="0" /><br /><br />
+                <button id="submitPaymentBtn">Submit Payment</button>
+                <div id="paymentStatusMsg" style="color: green; margin-top: 10px;"></div>
+                <h3>Payment History</h3>
+                <table border="1" id="paymentHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Amount Paid (GHS)</th>
+                            <th>Remaining Balance (GHS)</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-content" id="students" style="display:none;">
+            <h2>Students List</h2>
+            <table border="1" id="studentsTable" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Student rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.getAttribute('data-tab');
+                tabContents.forEach(content => {
+                    content.style.display = content.id === tab ? 'block' : 'none';
+                });
+                if (tab === 'students') {
+                    populateStudentsTable();
+                }
+            });
+        });
+
+        // Function to populate students table
+        function populateStudentsTable() {
+            const studentsTableBody = document.querySelector('#studentsTable tbody');
+            studentsTableBody.innerHTML = '';
+            const admissions = JSON.parse(localStorage.getItem('admissions') || '[]');
+            admissions.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.class}</td>
+                `;
+                studentsTableBody.appendChild(row);
+            });
+        }
+
+        // Admission form handling
+        const admissionForm = document.getElementById('admissionForm');
+        const admissionMsg = document.getElementById('admissionMsg');
+
+        admissionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const student = {
+                name: document.getElementById('studentName').value,
+                dob: document.getElementById('dob').value,
+                class: document.getElementById('class').value,
+                parentName: document.getElementById('parentName').value,
+                admissionDate: document.getElementById('admissionDate').value,
+                parentPhone: document.getElementById('parentPhone').value,
+                parentAddress: document.getElementById('parentAddress').value
+            };
+
+            let admissions = JSON.parse(localStorage.getItem('admissions') || '[]');
+            admissions.push(student);
+            localStorage.setItem('admissions', JSON.stringify(admissions));
+
+            admissionMsg.textContent = 'Admission submitted successfully!';
+            admissionForm.reset();
+            updateOwnerDashboardData();
+        });
+
+        // Teachers attendance handling
+        const checkInBtn = document.getElementById('checkInBtn');
+        const checkOutBtn = document.getElementById('checkOutBtn');
+        const attendanceMsg = document.getElementById('attendanceMsg');
+
+        checkInBtn.addEventListener('click', () => {
+            const name = document.getElementById('teacherName').value.trim();
+            if (!name) {
+                attendanceMsg.style.color = 'red';
+                attendanceMsg.textContent = 'Please enter your name to check in.';
+                return;
+            }
+            let attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+            attendance[name] = { checkIn: new Date().toISOString(), checkOut: null };
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+            attendanceMsg.style.color = 'green';
+            attendanceMsg.textContent = `Checked in at ${new Date().toLocaleTimeString()}`;
+        });
+
+        checkOutBtn.addEventListener('click', () => {
+            const name = document.getElementById('teacherName').value.trim();
+            if (!name) {
+                attendanceMsg.style.color = 'red';
+                attendanceMsg.textContent = 'Please enter your name to check out.';
+                return;
+            }
+            let attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+            if (!attendance[name] || !attendance[name].checkIn) {
+                attendanceMsg.style.color = 'red';
+                attendanceMsg.textContent = 'You have not checked in yet.';
+                return;
+            }
+            attendance[name].checkOut = new Date().toISOString();
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+            attendanceMsg.style.color = 'green';
+            attendanceMsg.textContent = `Checked out at ${new Date().toLocaleTimeString()}`;
+        });
+
+        // Set Fees handling
+        const searchStudentInput = document.getElementById('searchStudent');
+        const studentFeeInfo = document.getElementById('studentFeeInfo');
+        const studentClassSpan = document.getElementById('studentClass');
+        const amountOwingSpan = document.getElementById('amountOwing');
+        const paymentAmountInput = document.getElementById('paymentAmount');
+        const payFeeBtn = document.getElementById('payFeeBtn');
+        const paymentMsg = document.getElementById('paymentMsg');
+        const paymentHistoryTableBody = document.querySelector('#paymentHistoryTable tbody');
+
+        let currentStudent = null;
+        let feesData = JSON.parse(localStorage.getItem('feesData') || '{}');
+
+        searchStudentInput.addEventListener('input', () => {
+            const name = searchStudentInput.value.trim();
+            if (!name) {
+                studentFeeInfo.style.display = 'none';
+                currentStudent = null;
+                return;
+            }
+            const admissions = JSON.parse(localStorage.getItem('admissions') || '[]');
+            const student = admissions.find(s => s.name.toLowerCase() === name.toLowerCase());
+            if (student) {
+                currentStudent = student;
+                studentClassSpan.textContent = student.class;
+                if (!feesData[name]) {
+                    // Initialize fees based on class
+                    const isJHS = student.class.toLowerCase().includes('jhs');
+                    feesData[name] = {
+                        totalFees: isJHS ? 1000 : 500,
+                        amountPaid: 0,
+                        payments: []
+                    };
+                    localStorage.setItem('feesData', JSON.stringify(feesData));
+                }
+                const owing = feesData[name].totalFees - feesData[name].amountPaid;
+                amountOwingSpan.textContent = owing.toFixed(2);
+                paymentHistoryTableBody.innerHTML = '';
+                feesData[name].payments.forEach(payment => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${payment.amount.toFixed(2)}</td>
+                        <td>${payment.remaining.toFixed(2)}</td>
+                        <td>${new Date(payment.timestamp).toLocaleString()}</td>
+                    `;
+                    paymentHistoryTableBody.appendChild(row);
+                });
+                studentFeeInfo.style.display = 'block';
+                paymentMsg.textContent = '';
+                paymentAmountInput.value = '';
+            } else {
+                studentFeeInfo.style.display = 'none';
+                currentStudent = null;
+            }
+        });
+
+        payFeeBtn.addEventListener('click', () => {
+            if (!currentStudent) return;
+            const name = currentStudent.name;
+            const amount = parseFloat(paymentAmountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                paymentMsg.style.color = 'red';
+                paymentMsg.textContent = 'Please enter a valid payment amount.';
+                return;
+            }
+            const owing = feesData[name].totalFees - feesData[name].amountPaid;
+            if (amount > owing) {
+                paymentMsg.style.color = 'red';
+                paymentMsg.textContent = 'Payment amount exceeds amount owing.';
+                return;
+            }
+            feesData[name].amountPaid += amount;
+            feesData[name].payments.push({
+                amount: amount,
+                remaining: feesData[name].totalFees - feesData[name].amountPaid,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('feesData', JSON.stringify(feesData));
+            paymentMsg.style.color = 'green';
+            paymentMsg.textContent = 'Payment recorded successfully.';
+            amountOwingSpan.textContent = (feesData[name].totalFees - feesData[name].amountPaid).toFixed(2);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${amount.toFixed(2)}</td>
+                <td>${(feesData[name].totalFees - feesData[name].amountPaid).toFixed(2)}</td>
+                <td>${new Date().toLocaleString()}</td>
+            `;
+            paymentHistoryTableBody.appendChild(row);
+            paymentAmountInput.value = '';
+            updateOwnerDashboardData();
+        });
+
+        // Function to update data for owner dashboard
+        function updateOwnerDashboardData() {
+            const admissions = JSON.parse(localStorage.getItem('admissions') || '[]');
+            const attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+            const feesData = JSON.parse(localStorage.getItem('feesData') || '{}');
+            const data = { admissions, attendance, feesData };
+            localStorage.setItem('ownerDashboardData', JSON.stringify(data));
+        }
+
+        // Initialize first tab
+        tabButtons[0].click();
+    </script>
+    <script>
+        // Modal open/close logic for admission form
+        const modal = document.getElementById('admissionModal');
+        const openBtn = document.getElementById('openAdmissionFormBtn');
+        const closeBtn = modal.querySelector('.close');
+
+        openBtn.onclick = function() {
+            modal.style.display = 'block';
+        };
+
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
